@@ -1,0 +1,116 @@
+# Copyright © 2023 OpenIM open source community. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Need to start Openimserver first
+zookeeper:
+  schema: openim
+  zkAddr:
+    - openim-zookeeper.openim-dependencies.svc.cluster.local:2181
+  username: ""
+  password: ""
+
+chatApi:
+  openImChatApiPort: [ 10008 ]
+  listenIP:
+
+adminApi:
+  openImAdminApiPort: [ 10009 ]
+  listenIP:
+
+rpc:
+  registerIP:                          #When starting as RPC, register to the ip of Zookeeper, API/Gateway can access the port in this IP and the corresponding RPCPORT
+  listenIP: 0.0.0.0                             #Declars 0.0.0.0
+
+rpcPort:
+  openImAdminPort: [ 30200 ]
+  openImChatPort: [ 30300 ]
+rpcRegisterName:
+  openImAdminName: admin
+  openImChatName: chat
+
+mysql:
+  address: [ openim-mysql.openim-dependencies.svc.cluster.local:3306 ]
+  username: root
+  password: openIM123
+  #  address: [ 127.0.0.1:13306 ]            #Currently only support single machine
+  #  username: root                         #username
+  #  password: openIM123                    #password
+  #  database: openIM_v2                    #Not recommended to modify
+  #  maxOpenConn: 1000                      #Maximum connection number
+  #  maxIdleConn: 100                       #idle
+  #  maxLifeTime: 60                         #The longest time (second) that can be reused (second)
+  #  logLevel: 4                            #Level 1 = slient 2 = error 3 = warn 4 = info
+  #  slowThreshold: 500                      #Threshold (millisecond)
+  database: openim_enterprise
+
+# No configuration representation is consistent with Openim
+log:
+  storageLocation: ../logs/         # #live
+#  rotationTime: 24                    #Time
+#  remainRotationCount: 2             #Log quantity
+#  remainLogLevel: 6                  #Level 6 indicates all printed,
+#  isStdout: false
+#  isJson: false
+#  withStack: false
+
+secret: openIM123
+
+tokenPolicy:
+  expire: 90
+
+verifyCode:
+  validTime: 300 # Valid time of verification code
+  validCount: 5 # Valid number of verification codes
+  uintTime: 86400 # Unit time interval
+  maxCount: 10 # The maximum number of acquisitions during the unit time
+  superCode: "666666" # Super verification code (only used for use is used)
+  len: 6 #Verification code length
+  use: "" # The verification code service used (use: "ali")
+  ali:
+    endpoint: "dysmsapi.aliyuncs.com"
+    accessKeyId: ""
+    accessKeySecret: ""
+    signName: ""
+    verificationCodeTemplateCode: ""
+  mail: # Change Sendmail, SendrautHorizationCode, SMTPADDR, SMTPPPORT
+    title: ""
+    senderMail: "" # sender
+    senderAuthorizationCode: "" # Authorization code
+    smtpAddr: "smtp.qq.com"  # SMTP server address
+    smtpPort: 25   # smtp Server mail sending port
+  testDepartMentID: 001
+  imAPIURL: http://api.openim.svc.cluster.local:10002
+
+
+# Get the IP header, and directly get the remote address without configuration
+#Proxyheader: "X-FORWARDED-For"
+
+adminList:
+  - adminID: admin1
+    nickname: chat1
+    imAdmin: openIM123456
+  - adminID: admin2
+    nickname: chat2
+    imAdmin: openIM654321
+  - adminID: admin3
+    nickname: chat3
+    imAdmin: openIMAdmin
+
+
+openIMUrl: "http://api.openim.svc.cluster.local:10002"
+
+redis:
+  # address: [ 127.0.0.1:16379 ]
+  # username:
+  # password: openIM123

@@ -1,0 +1,96 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+spec:
+  selector:
+    matchLabels:
+      app: auth 
+  replicas: 3 
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+      - name: rpc-auth
+        image: truongpx396/openim-dev-rpc_auth:37405b73-66
+        imagePullPolicy: Always
+        # command: ["./open_im_auth"]
+        # args: ["--port", "10160"]
+        ports:
+        - containerPort: 10160
+          name: auth-rpc-port
+        - containerPort: 20160
+          name: auth-prom-port
+
+        volumeMounts:
+          - name: config
+            mountPath: /openim/config
+            readOnly: true
+        # readinessProbe:
+        #   exec:
+        #     command: ["/bin/grpc_health_probe", "-addr=:10160"]
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
+        # livenessProbe:
+        #   exec:
+        #     command: ["/bin/grpc_health_probe", "-addr=:10160"]
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 10
+        env:
+          - name: CONFIG_NAME
+            value: "/Open-IM-Server"
+        resources:
+          # requests:
+          #   memory: "256Mi"
+          #   cpu: 150m
+          requests:
+            cpu: 70m
+            memory: 50Mi
+          limits:
+            cpu: 150m
+            memory: "80Mi"
+            # memory: "512Mi"
+            # cpu: 300m
+      volumes:
+        - name: config
+          projected:
+            sources:
+            - configMap:
+                name: config
+            - configMap:
+                name: notification
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - auth
+              topologyKey: kubernetes.io/hostname
+  strategy:
+    type: RollingUpdate 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+spec:
+  ports:
+    - name: auth-svc-port
+      protocol: TCP
+      port: 10160
+      targetPort: auth-port
+    - name: auth-prom-port
+      protocol: TCP
+      port: 20160
+      targetPort: auth-prom-port
+  selector:
+    app: auth 
+  type: ClusterIP  

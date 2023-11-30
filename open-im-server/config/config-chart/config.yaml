@@ -1,0 +1,379 @@
+# The class cannot be named by Pascal or camel case.
+# If it is not used, the corresponding structure will not be set,
+# and it will not be read naturally.
+serverversion: 2.3.7
+#---------------Infrastructure configuration---------------------#
+zookeeper:
+  schema: openim  #Default
+  # zkAddr: [ zookeeper-cluster.zookeeper.svc.cluster.local:2181] #When the single machine deployment, the default can
+  address: [ openim-zookeeper.openim-dependencies.svc.cluster.local:2181 ] #When the single machine deployment, the default can
+  userName:
+  password:
+
+mysql:
+  address: [ openim-mysql.openim-dependencies.svc.cluster.local:3306 ]
+  username: root
+  password: openIM123
+  database: openIM_v3
+  maxOpenConn: 1000
+  maxIdleConn: 100
+  maxLifeTime: 60
+  logLevel: 4
+  slowThreshold: 500
+  # dbMysqlAddress: [ mysql-cluster-primary.mysql.svc.cluster.local:3306 ] #MySQL address is currently only supported by a single machine, just default
+  # dbMysqlUserName: root#Mysql user name, it is recommended to modify
+  # dbMysqlPassword: openIMExamplePwd # mysql password, it is recommended to modify
+  # dbMysqlDatabaseName: openIM_v2 #Default
+  # dbTableName: eMsg #Default
+  # dbMsgTableNum: 1
+  # dbMaxOpenConns: 100
+  # dbMaxIdleConns: 10
+  # dbMaxLifeTime: 5
+  # logLevel: 4 #1=slient 2=error 3=warn 4=info
+  # slowThreshold: 500
+
+mongo:
+  uri: ''
+  address: [ openim-mongodb.openim-dependencies.svc.cluster.local:27017 ]
+  database: openIM_v3
+  username: root
+  password: 'openIM123'
+  maxPoolSize: 100
+  # dbUri: ""#When the dburi value is not empty, the value is directly used
+  # dbAddress: [ mongo-shared-cluster-mongodb-sharded.mongo.svc.cluster.local:27017 ] #When the single machine is Mongo address, when using a cluster, you can default for the mongos address
+  # dbDirect: false
+  # dbTimeout: 60
+  # dbDatabase: openIM  #mongo db Just default
+  # dbSource: admin
+  # dbUserName: root #mongoUsername, it is recommended not to set up first
+  # dbPassword: openIMExamplePwd  #mongoPassword, it is recommended not set up first
+  # dbMaxPoolSize: 100
+  # dbRetainChatRecords: 3650 #mongoSave the offline message time (day), modify according to the needs
+  # chatRecordsClearTime: "0 2 * * 3" #Clear the message at 2 am every Wednesday. The configuration is the same as Linux timing tasks. The cleanup operation is recommended to set up when the user is active. # 0 3 * * * * *
+
+redis:
+  # dbAddress: [ redis-cluster.redis.svc.cluster.local:6379 ] #Redis address, just fill in a address. When using the redis cluster, fill in multiple node addresses in the cluster (the mainstorphic address can be filled in, increase the disaster recovery ability), and default
+  # dbMaxIdle: 128
+  # dbMaxActive: 0
+  # dbIdleTimeout: 120
+  # dbUserName:     #only redis version 6.0+ need username
+  # dbPassWord: openIMExamplePwd #redisPassword Suggestion modification
+  # enableCluster: true #If the external redis starts in a cluster, you need to open this switch
+  address: [ openim-redis-master.openim-dependencies.svc.cluster.local:6379 ]
+  username: ''
+  password: 'openIM123'
+
+kafka:
+  username: 'user1'
+  password: '123'
+  # username: ''
+  # password: ''
+  addr: [ openim-kafka.openim-dependencies.svc.cluster.local:9092 ]
+  latestMsgToRedis:
+    topic: "latestMsgToRedis"
+  offlineMsgToMongo:
+    topic: "offlineMsgToMongoMysql"
+  msgToPush:
+    topic: "msgToPush"
+  consumerGroupID:
+    msgToRedis: redis
+    msgToMongo: mongo
+    msgToMySql: mysql
+    msgToPush: push
+  # SASLUserName:
+  # SASLPassword:
+  # ws2mschat:
+  #   addr: [ kafka-cluster.kafka.svc.cluster.local:9092 ] #kafka configuration, the default
+  #   topic: "ws2ms_chat" #The saved message for Mongo and MySQL
+  # msgtomongo:
+  #   addr: [ kafka-cluster.kafka.svc.cluster.local:9092 ] #kafka configuration, the default
+  #   topic: "msg_to_mongo"
+  # ms2pschat:
+  #   addr: [ kafka-cluster.kafka.svc.cluster.local:9092 ] #kafka configuration, the default
+  #   topic: "ms2ps_chat" #H push
+  # msgtomodify:
+  #   addr: [ kafka-cluster.kafka.svc.cluster.local:9092 ] #kafka configuration, the default
+  #   topic: "msg_to_modify"
+  # consumergroupid:
+  #   msgToTransfer: mongo
+  #   msgToMongo: mongo_ex
+  #   msgToMySql: mysql
+  #   msgToPush: push
+  #   msgToModify: modify
+
+
+#---------------Internal service configuration---------------------#
+
+# The service ip default is empty,
+# automatically obtain the machine's valid network card ip as the service ip,
+# otherwise the configuration ip is preferred
+#If it is a stand -alone mode, use 0.0.0.0 or not fill in, the default
+
+#As a RPC, the address registered to the ETCD can be used by the single machine. If it is a cluster deployment, it is necessary to modify it (the internal network address is or the external network address. It depends on the situation. The purpose is that the API/Gateway can be accessed)
+rpcRegisterIP:
+#Default
+listenIP: 0.0.0.0
+
+
+api:
+  openImApiPort: [ 10002 ] #API service port, default, you need to open this port or do NGINX forwarding
+  listenIP: 0.0.0.0
+
+sdk:
+  openImSdkWsPort: [ 10003 ] #JSSDK service port, you can use JSSDK in the project to open this port or do Nginx forwarding
+  dataDir: [ ../db/sdk/ ]
+  openImWsAddress: ws://127.0.0.1:10001
+  openImApiAddress: http://127.0.0.1:10002
+
+#Object storage service, the following configuration two selection, currently supports two types, Tencent Cloud and Minio, the two can be configured (if you use minio reference https://doc.rentsoft.cn/qa/minioBuild a minio server)
+credential: #Tencent COS, need to send pictures, videos, and files. Please apply for it by yourself. You must modify
+
+###################### Object configuration information ######################
+# Object storage configuration
+#
+# Use minio for object storage
+# API URL should be accessible by the app
+# It's not recommended to modify the bucket name
+# Endpoint should be accessible by the app
+# Session token
+# Configuration for Tencent COS
+# Configuration for Aliyun OSS
+# apiURL is the address of the api, the access address of the app, use s3 must be configured
+# minio.endpoint can be configured as an intranet address,
+# minio.signEndpoint is minio public network address
+object:
+  enable: minio
+  # apiURL: http://api.openim.svc.cluster.local:10002/third/object
+  apiURL: https://openim.k8s.magiclab396.com
+  minio: #Minio When sending pictures, videos, and files, please apply for it by yourself. You must modify it.The client initializes Initsdk, the Object_storage parameter is minio
+    bucket: "openim"
+    dataBucket: "openim"
+    # location: us-east-1
+    endpoint: http://openim-minio.openim-dependencies.svc.cluster.local:9000 #Minio outer network IP IP is visited for the client
+    signEndpoint: "https://minio-api.k8s.magiclab396.com"
+    # accessKeyID: admin
+    # secretAccessKey: openIMExamplePwd
+    accessKeyID: "root"
+    secretAccessKey: "openIM123"
+    publicRead: false
+    isDistributedMod: false # Whether or not distributed multi-hard disk deployment default Docker-compose is false. If it is a multi-hard disk deployment, you need to modify it to True
+  tENCENT:
+    appID:
+    region:
+    bucket:
+    secretID:
+    secretKey:
+  ali: # ali oss
+    regionID:
+    accessKeyID:
+    accessKeySecret:
+    stsEndpoint:
+    ossEndpoint:
+    bucket:
+    finalHost:
+    stsDurationSeconds:
+    OssRoleArn:
+  aws:
+    accessKeyID:                              #AccessKeyid associated by assumerole user
+    accessKeySecret:                          #ACCESSKEYSECRT
+    region:                                  #Partition
+    bucket:                                   #bucket
+    finalHost:                                #
+    roleArn:                                  #RoleArn
+    externalId:                               #Character extension ID
+    roleSessionName:                         #Character session name
+
+rpcPort: #RPC service port default
+  openImUserPort: [ 10110 ]
+  openImFriendPort: [ 10120 ]
+  openImMessagePort: [ 10130 ]
+  openImMessageGatewayPort: [ 10140 ]
+  openImGroupPort: [ 10150 ]
+  openImAuthPort: [ 10160 ]
+  openImPushPort: [ 10170 ]
+  openImConversationPort: [ 10180 ]
+  openImRtcPort: [ 10190 ]
+  openImThirdPort: [ 10200 ]
+
+rpcRegisterName: #RPC registration service name, default
+  openImUserName: User
+  openImFriendName: Friend
+  openImMsgName: Msg
+  openImPushName: Push
+  openImMessageGatewayName: MessageGateway
+  openImMessageTransfer: MessageTransfer
+  openImGroupName: Group
+  openImAuthName: Auth
+  openImConversationName: Conversation
+  openImRtcName: Rtc
+  openImThirdName: Third
+
+log:
+  storageLocation: ../logs/
+  rotationTime: 24
+  remainRotationCount: 2 #Log quantity
+  #6 indicates all printing, and the recommended setting during the test stage is 6
+  remainLogLevel: 6
+  isStdout: false
+  isJson: false
+  withStack: false
+
+modulename: #Log file is named by the module, the default can be
+  longConnSvrName: msg_gateway
+  msgTransferName: msg_transfer
+  pushName: push
+
+longConnSvr:
+  openImWsPort: [ 10001 ] # WS service port, you can default, you must open this port or do NGINX forwarding
+  websocketMaxConnNum: 100000
+  websocketMaxMsgLen: 4096
+  websocketTimeout: 10
+
+## push can only open one enable representative opening
+push:
+  tpns: #Tencent push, don’t use it for the time being, don’t use it for the time being
+    ios:
+      accessID: 1600018281
+      secretKey: 3cd68a77a95b89e5089a1aca523f318f
+    android:
+      accessID: 111
+      secretKey: 111
+    enable: false # true or false (bool)
+  jpns: #After the application in the Aurora background, modify the following four items. You must modify it
+    appKey:
+    masterSecret:
+    pushUrl:
+    pushIntent:
+    enable: false # true or false (bool)
+  getui: #
+    pushUrl: "https://restapi.getui.com/v2/$appId"
+    masterSecret: ""
+    appKey: ""
+    intent: ""
+    enable: false # true or false (bool)
+    channelID: ""
+    channelName: ""
+  fcm: #Firebase Cloud Message message push
+    serviceAccount: "openim-5c6c0-firebase-adminsdk-ppwol-8765884a78.json" #Account file, you need to modify the configuration here, and this file is placed in the confid directory
+    enable: false
+
+manager:
+  userID: [ "openIM123456", "openIM654321", "openIMAdmin" ]
+  nickname: [ "system1", "system2", "system3" ]
+
+# manager:
+#   #appAdministrator Userid and the corresponding Secret recommendation modify.Used to manage background login, you can also manage the API corresponding to the background of the background
+#   appManagerUid: [ "openIM123456","openIM654321", "openIM333", "openIMAdmin" ]
+#   nickname: [ "system notification","openIM654321", "openIM333", "openIMAdmin" ]
+
+
+secret: openIM123
+# Multi -end kicking strategy
+# 1：Multi -platform login: Android, iOS, Windows, MAC each platform can only be online.
+multiloginpolicy: 1
+
+#msg log insert to db
+chatPersistenceMysql: true
+#Message cache time
+msgCacheTimeout: 86400
+#Group chat has been read and opened
+groupMessageHasReadReceiptEnable: true
+#Single chat has been read and opened
+singleMessageHasReadReceiptEnable: true
+
+#token config
+tokenPolicy:
+  # accessSecret: "OpenIM_server" #tokenGenerate correlation, default
+  # Token effective time day as a unit
+  expire: 90  #tokenExpired time (day) default
+
+messageVerify:
+  friendVerify: false
+
+#iosSystem push sound and mark count
+iospush:
+  pushSound: "xxx"
+  badgeCount: true
+  production: false
+
+callback:
+  # callback urlNeed to replace the callback by yourself url
+  callbackUrl: "http://127.0.0.1:10008/callback/open_im"
+  # Open the configuration of the adjustment before and after the turnover operation
+  callbackBeforeSendSingleMsg:
+    enable: false # Whether the callback is enabled
+    callbackTimeOut: 2 # Return timeout time
+    callbackFailedContinue: true # Whether the callback timeout continues to execute the code
+  callbackAfterSendSingleMsg:
+    enable: false
+    callbackTimeOut: 2
+  callbackBeforeSendGroupMsg:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true
+  callbackAfterSendGroupMsg:
+    enable: false
+    callbackTimeOut: 2
+  callbackMsgModify:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true
+  callbackUserOnline:
+    enable: false
+    callbackTimeOut: 2
+  callbackUserOffline:
+    enable: false
+    callbackTimeOut: 2
+  callbackUserKickOff:
+    enable: false
+    callbackTimeOut: 2
+  callbackOfflinePush:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues to push offline
+  callbackOnlinePush:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues to push offline
+  callbackSuperGroupOnlinePush:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues to push offline
+  callbackBeforeAddFriend:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues
+  callbackBeforeCreateGroup:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues
+  callbackBeforeMemberJoinGroup:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true #Whether the callback timeout continues
+  callbackBeforeSetGroupMemberInfo:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues
+  callbackSetMessageReactionExtensions:
+    enable: false
+    callbackTimeOut: 2
+    callbackFailedContinue: true # Whether the callback timeout continues
+
+rtc:
+  signalTimeout: 35
+
+# prometheusThe number of ports for each service monitoring needs to be consistent with RPC PORT
+prometheus:
+  enable: true
+  userPrometheusPort: [ 20110 ]
+  friendPrometheusPort: [ 20120 ]
+  messagePrometheusPort: [ 20130 ]
+  messageGatewayPrometheusPort: [ 20140 ]
+  groupPrometheusPort: [ 20150 ]
+  authPrometheusPort: [ 20160 ]
+  pushPrometheusPort: [ 20170 ]
+  conversationPrometheusPort: [ 20180 ]
+  rtcPrometheusPort: [ 21300 ]
+  messageTransferPrometheusPort: [ 21400, 21401, 21402, 21403 ] # The number of ports is consistent with the number
+

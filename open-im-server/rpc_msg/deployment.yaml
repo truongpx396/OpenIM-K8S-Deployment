@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msg-deployment
+spec:
+  selector:
+    matchLabels:
+      app: msg
+  replicas: 3 
+  template:
+    metadata:
+      labels:
+        app: msg 
+    spec:
+      containers:
+      - name: rpc-msg
+        image: truongpx396/openim-dev-rpc_msg:bdfd5717-68
+        # command: ["./open_im_msg"]
+        # args: ["--port", "10130", "--prometheus_port","20130"]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 10130
+          name: msg-port
+        - containerPort: 20130
+          name: msg-prom-port
+        # readinessProbe:
+        #   exec:
+        #     command: ["/bin/grpc_health_probe", "-addr=:10130"]
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
+        # livenessProbe:
+        #   exec:
+        #     command: ["/bin/grpc_health_probe", "-addr=:10130"]
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 10
+        volumeMounts:
+          - name: config
+            mountPath: /openim/config
+            readOnly: true
+        env:
+          - name: CONFIG_NAME
+            value: "/Open-IM-Server"
+        resources:
+          # requests:
+          #   memory: "512Mi"
+          #   cpu: 300m
+          requests:
+            cpu: 70m
+            memory: 60Mi
+          limits:
+            cpu: 100m
+            memory: "80Mi"
+            
+            # memory: "1024Mi"
+            # cpu: 600m
+      volumes:
+        - name: config
+          projected:
+            sources:
+            - configMap:
+                name: config
+            - configMap:
+                name: notification
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - msg
+              topologyKey: kubernetes.io/hostname
+  strategy:
+    type: RollingUpdate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: msg
+spec:
+  ports:
+    - name: msg-svc-port
+      protocol: TCP
+      port: 10130
+      targetPort: msg-port
+    - name: msg-prom-port
+      protocol: TCP
+      port: 20130
+      targetPort: msg-prom-port
+  selector:
+    app: msg
+  type: ClusterIP  

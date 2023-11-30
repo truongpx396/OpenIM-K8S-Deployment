@@ -1,0 +1,104 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msg-gateway-deployment
+spec:
+  selector:
+    matchLabels:
+      app: msg-gateway 
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: msg-gateway
+    spec:
+      containers:
+      - name: msg-gateway
+        image: truongpx396/openim-dev-msg_gateway:b24dd770-32
+        # command: ["./open_im_msg_gateway"]
+        # args: ["--port", "10140", "--ws_port", "10001", "--prometheus_port", "20240"]
+        imagePullPolicy: Always
+        ports:
+        - name: rpc-port
+          containerPort: 10140
+        - name: ws-port
+          containerPort: 10001
+        - name: prom-port
+          containerPort: 20140
+        # readinessProbe:
+        #   tcpSocket:
+        #     port: 10001
+        #   exec:
+        #     command: ["/bin/grpc_health_probe", "-addr=:10140"]
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
+        # livenessProbe:
+        #   tcpSocket:
+        #     port: 10001
+        #   exec:
+        #     command: ["/bin/grpc_health_probe", "-addr=:10140"]
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 10
+        volumeMounts:
+          - name: config
+            mountPath: /openim/config
+            readOnly: true
+        env:
+          - name: CONFIG_NAME
+            value: "/Open-IM-Server"
+        resources:
+          requests:
+            cpu: 150m
+            memory: "100Mi"
+          limits:
+            cpu: 200m
+            memory: "120Mi"
+            # memory: "1024Mi"
+            # cpu: 600m
+      volumes:
+        - name: config
+          projected:
+            sources:
+            - configMap:
+                name: config
+            - configMap:
+                name: notification
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - msg-gateway
+              topologyKey: kubernetes.io/hostname
+  strategy: 
+    type: RollingUpdate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: msg-gateway
+spec:
+  ports:
+    - name: msg-gateway-svc-port
+      protocol: TCP
+      port: 10001
+      targetPort: ws-port
+    - name: msg-gateway-rpc-svc-port
+      protocol: TCP
+      port: 10140
+      targetPort: rpc-port
+    - name: msg-gateway-prom-port
+      protocol: TCP
+      port: 20140
+      targetPort: prom-port
+  selector:
+    app: msg-gateway
+  type: ClusterIP   
+
+    

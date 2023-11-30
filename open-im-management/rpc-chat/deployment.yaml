@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: management-rpc-chat-deployment
+spec:
+  selector:
+    matchLabels:
+      app: management-rpc-chat
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: management-rpc-chat 
+    spec:
+      containers:
+      - name: management-rpc-chat
+        image: truongpx396/openim-mgmt-dev-rpc-chat:6746fda-8
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 30300
+          name: rpc-chat-port
+        volumeMounts:
+          - name: config
+            mountPath: /openim/openim-chat/config
+            readOnly: true
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: 30m
+            # memory: "512Mi"
+            # cpu: 300m
+          limits:
+            memory: "100Mi"
+            cpu: 70m
+            # memory: "1024Mi"
+            # cpu: 600m
+      volumes:
+        - name: config
+          projected:
+            sources:
+            - configMap:
+                name: config
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - management-rpc-chat
+              topologyKey: kubernetes.io/hostname
+  strategy: 
+    type: RollingUpdate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: management-rpc-chat
+spec:
+  ports:
+    - name: rpc-chat-svc-port
+      protocol: TCP
+      port: 30300
+      targetPort: rpc-chat-port
+  selector:
+    app: management-rpc-chat
+  type: ClusterIP  

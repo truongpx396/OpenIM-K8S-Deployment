@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: management-api-chat-deployment
+spec:
+  selector:
+    matchLabels:
+      app: management-api-chat
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: management-api-chat 
+    spec:
+      containers:
+      - name: management-api-chat
+        image: truongpx396/openim-mgmt-dev-api-chat:f23e1dc-10
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 10008
+          name: api-chat-port
+        volumeMounts:
+          - name: config
+            mountPath: /openim/openim-chat/config
+            readOnly: true
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 10002
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 10002
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 10
+        # env:
+        #   - name: CONFIG_NAME
+        #     value: "/Open-IM-Server"
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: 30m
+            # memory: "512Mi"
+            # cpu: 300m
+          limits:
+            memory: "100Mi"
+            cpu: 70m
+            # memory: "1024Mi"
+            # cpu: 600m
+      volumes:
+        - name: config
+          projected:
+            sources:
+            - configMap:
+                name: config
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - management-api-chat
+              topologyKey: kubernetes.io/hostname
+  strategy: 
+    type: RollingUpdate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: management-api-chat
+spec:
+  ports:
+    - name: api-chat-svc-port
+      protocol: TCP
+      port: 10008
+      targetPort: api-chat-port
+  selector:
+    app: management-api-chat
+  type: ClusterIP  
