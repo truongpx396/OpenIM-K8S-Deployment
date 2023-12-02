@@ -21,8 +21,8 @@ pilot:
   # Resources for a small pilot install
   resources:
     requests:
-      cpu: 500m
-      memory: 1048Mi
+      cpu: 300m
+      memory: 700Mi
 
   # Set to `type: RuntimeDefault` to use the default profile if available.
   seccompProfile: {}
@@ -362,11 +362,11 @@ global:
     # Resources for the sidecar.
     resources:
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 20m
+        memory: 80Mi
       limits:
-        cpu: 500m
-        memory: 250Mi
+        cpu: 80m
+        memory: 128Mi
 
     # Default port for Pilot agent health checks. A value of 0 will disable health checking.
     statusPort: 15020
