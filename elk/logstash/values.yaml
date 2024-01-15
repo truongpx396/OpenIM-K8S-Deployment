@@ -114,13 +114,12 @@ labels: {}
 logstashJavaOpts: "-Xmx1g -Xms1g"
 
 resources:
-  {}
-  # requests:
-  #   cpu: "100m"
-  #   memory: "1536Mi"
-  # limits:
-  #   cpu: "1000m"
-  #   memory: "1536Mi"
+  requests:
+    cpu: "100m"
+    memory: "100Mi"
+  limits:
+    cpu: "500m"
+    memory: "200Mi"
 
 volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
