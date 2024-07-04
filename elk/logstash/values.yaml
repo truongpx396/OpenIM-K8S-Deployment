@@ -119,7 +119,7 @@ resources:
     memory: "100Mi"
   limits:
     cpu: "500m"
-    memory: "200Mi"
+    memory: "500Mi"
 
 volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
