@@ -92,7 +92,7 @@ resources:
     cpu: "200m"
     memory: "200Mi"
   limits:
-    cpu: "900m"
+    cpu: "2000m"
     memory: "1024Mi"
 
 initResources: {}
