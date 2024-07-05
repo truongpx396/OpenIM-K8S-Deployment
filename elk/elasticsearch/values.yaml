@@ -243,7 +243,7 @@ readinessProbe:
 
 # https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html#request-params wait_for_status
 # clusterHealthCheckParams: "wait_for_status=green&timeout=1s"
-clusterHealthCheckParams: "ait_for_status=yellow&timeout=50s"
+clusterHealthCheckParams: "wait_for_status=yellow&timeout=50s"
 
 
 ## Use an alternate scheduler.
