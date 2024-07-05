@@ -118,7 +118,7 @@ resources:
     cpu: "200m"
     memory: "200Mi"
   limits:
-    cpu: "500m"
+    cpu: "1000m"
     memory: "1000Mi"
 
 volumeClaimTemplate:
@@ -292,19 +292,19 @@ lifecycle:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
 
 service:
-  {}
+  # {}
   # annotations: {}
-  # type: ClusterIP
+  type: ClusterIP
   # loadBalancerIP: ""
-  # ports:
-  #   - name: beats
-  #     port: 5044
-  #     protocol: TCP
-  #     targetPort: 5044
-  #   - name: http
-  #     port: 8080
-  #     protocol: TCP
-  #     targetPort: 8080
+  ports:
+    - name: beats
+      port: 5044
+      protocol: TCP
+      targetPort: 5044
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
 
 ingress:
   enabled: false

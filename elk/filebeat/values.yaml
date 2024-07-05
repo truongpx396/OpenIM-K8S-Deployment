@@ -68,7 +68,8 @@ daemonset:
             - logs_path:
                 logs_path: "/var/log/containers/"
       output.logstash:
-        hosts: [ "logstash-logstash:5044" ]
+        # hosts: [ "logstash-logstash:5044" ]
+        hosts: [ "elk-logstash-logstash:5044" ]
       # output.elasticsearch:
       #   host: '${NODE_NAME}'
       #   hosts: '["https://${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}"]'
