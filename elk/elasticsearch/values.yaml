@@ -236,7 +236,8 @@ sysctlVmMaxMapCount: 262144
 readinessProbe:
   failureThreshold: 3
   # initialDelaySeconds: 10
-  initialDelaySeconds: 120
+  # initialDelaySeconds: 120
+  initialDelaySeconds: 30
   periodSeconds: 10
   successThreshold: 3
   timeoutSeconds: 5
