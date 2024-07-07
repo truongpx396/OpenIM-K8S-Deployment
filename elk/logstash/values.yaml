@@ -38,19 +38,27 @@ logstashPipeline:
       output {
       if "myopensource" in [tags] {
         elasticsearch {
-          hosts => [ "elasticsearch-master:9200" ]
+          hosts => [ "https://elasticsearch-master:9200" ]
+          user => '${ELASTICSEARCH_USERNAME}'
+          password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myopensource_%{+YYYY.MM.dd}"
           }
         }
         else if "myservice" in [tags] {
         elasticsearch {
-          hosts => [ "elasticsearch-master:9200" ]
+          # hosts => [ "elasticsearch-master:9200" ]
+          hosts => [ "https://elasticsearch-master:9200" ]
+          user => '${ELASTICSEARCH_USERNAME}'
+          password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myservice_%{+YYYY.MM.dd}"
           }
         }
         else {
         elasticsearch {
-          hosts => [ "elasticsearch-master:9200" ]
+          # hosts => [ "elasticsearch-master:9200" ]
+          hosts => [ "https://elasticsearch-master:9200" ]
+          user => '${ELASTICSEARCH_USERNAME}'
+          password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_default_%{+YYYY.MM.dd}"
           }
         }
@@ -65,7 +73,17 @@ logstashPattern: {}
 # Extra environment variables to append to this nodeGroup
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
-extraEnvs: []
+extraEnvs: 
+    - name: "ELASTICSEARCH_USERNAME"
+      valueFrom:
+        secretKeyRef:
+          name: elasticsearch-master-credentials
+          key: username
+    - name: "ELASTICSEARCH_PASSWORD"
+      valueFrom:
+        secretKeyRef:
+          name: elasticsearch-master-credentials
+          key: password
 #  - name: MY_ENVIRONMENT_VAR
 #    value: the_value_goes_here
 
