@@ -39,15 +39,18 @@ logstashPipeline:
       if "myopensource" in [tags] {
         elasticsearch {
           hosts => [ "https://elasticsearch-master:9200" ]
+          cacert => '/usr/share/logstash/certs/ca.crt' 
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myopensource_%{+YYYY.MM.dd}"
+          cacert => '/usr/share/logstash/certs/ca.crt' 
           }
         }
         else if "myservice" in [tags] {
         elasticsearch {
           # hosts => [ "elasticsearch-master:9200" ]
           hosts => [ "https://elasticsearch-master:9200" ]
+          cacert => '/usr/share/logstash/certs/ca.crt' 
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myservice_%{+YYYY.MM.dd}"
@@ -57,6 +60,7 @@ logstashPipeline:
         elasticsearch {
           # hosts => [ "elasticsearch-master:9200" ]
           hosts => [ "https://elasticsearch-master:9200" ]
+          cacert => '/usr/share/logstash/certs/ca.crt' 
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_default_%{+YYYY.MM.dd}"
@@ -111,7 +115,10 @@ secrets: []
 #      cert.key.filepath: "secrets.crt" # The path to file should be relative to the `values.yaml` file.
 
 # A list of secrets and their paths to mount inside the pod
-secretMounts: []
+secretMounts:
+  - name: elasticsearch-master-certs
+    secretName: elasticsearch-master-certs
+    path: /usr/share/logstash/certs/
 
 hostAliases: []
 #- ip: "127.0.0.1"
