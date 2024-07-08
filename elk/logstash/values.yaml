@@ -13,7 +13,7 @@ logstashConfig:
     xpack.monitoring.elasticsearch.username: '${ELASTICSEARCH_USERNAME}'
     xpack.monitoring.elasticsearch.password: '${ELASTICSEARCH_PASSWORD}'
     xpack.monitoring.elasticsearch.hosts: ["https://elasticsearch-master:9200"]
-    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/certs/elastic-certificate.crt
+    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/certs/ca.crt
 
 #  logstash.yml: |
 #    key:
