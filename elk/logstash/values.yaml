@@ -6,7 +6,15 @@ replicas: 1
 #
 # Note that when overriding logstash.yml, `http.host: 0.0.0.0` should always be included
 # to make default probes work.
-logstashConfig: {}
+logstashConfig: 
+  logstash.yml: |
+    http.host: 0.0.0.0
+    xpack.monitoring.enabled: true
+    xpack.monitoring.elasticsearch.username: '${ELASTICSEARCH_USERNAME}'
+    xpack.monitoring.elasticsearch.password: '${ELASTICSEARCH_PASSWORD}'
+    xpack.monitoring.elasticsearch.hosts: ["https://elasticsearch-master:9200"]
+    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/certs/elastic-certificate.crt
+
 #  logstash.yml: |
 #    key:
 #      nestedkey: value
@@ -39,9 +47,7 @@ logstashPipeline:
       if "myopensource" in [tags] {
         elasticsearch {
           hosts => [ "https://elasticsearch-master:9200" ]
-          ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt'
-          ssl_certificate_verification => false
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myopensource_%{+YYYY.MM.dd}"
@@ -51,9 +57,7 @@ logstashPipeline:
         elasticsearch {
           # hosts => [ "elasticsearch-master:9200" ]
           hosts => [ "https://elasticsearch-master:9200" ]
-          ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
-          ssl_certificate_verification => false
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myservice_%{+YYYY.MM.dd}"
@@ -63,9 +67,7 @@ logstashPipeline:
         elasticsearch {
           # hosts => [ "elasticsearch-master:9200" ]
           hosts => [ "https://elasticsearch-master:9200" ]
-          ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
-          ssl_certificate_verification => false
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_default_%{+YYYY.MM.dd}"
@@ -73,7 +75,6 @@ logstashPipeline:
         }
       }
 
-xpack.monitoring.enabled: false
 
 # Allows you to add any pattern files in your custom pattern dir
 logstashPatternDir: "/usr/share/logstash/patterns/"
