@@ -39,17 +39,18 @@ logstashPipeline:
       if "myopensource" in [tags] {
         elasticsearch {
           hosts => [ "https://elasticsearch-master:9200" ]
+          ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myopensource_%{+YYYY.MM.dd}"
-          cacert => '/usr/share/logstash/certs/ca.crt' 
           }
         }
         else if "myservice" in [tags] {
         elasticsearch {
           # hosts => [ "elasticsearch-master:9200" ]
           hosts => [ "https://elasticsearch-master:9200" ]
+          ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
@@ -60,6 +61,7 @@ logstashPipeline:
         elasticsearch {
           # hosts => [ "elasticsearch-master:9200" ]
           hosts => [ "https://elasticsearch-master:9200" ]
+          ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
