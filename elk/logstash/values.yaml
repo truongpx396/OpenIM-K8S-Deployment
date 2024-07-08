@@ -70,6 +70,8 @@ logstashPipeline:
         }
       }
 
+xpack.monitoring.enabled: false
+
 # Allows you to add any pattern files in your custom pattern dir
 logstashPatternDir: "/usr/share/logstash/patterns/"
 logstashPattern: {}
