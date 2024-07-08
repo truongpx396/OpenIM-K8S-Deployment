@@ -40,7 +40,8 @@ logstashPipeline:
         elasticsearch {
           hosts => [ "https://elasticsearch-master:9200" ]
           ssl => true
-          cacert => '/usr/share/logstash/certs/ca.crt' 
+          cacert => '/usr/share/logstash/certs/ca.crt'
+          ssl_certificate_verification => false
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myopensource_%{+YYYY.MM.dd}"
@@ -52,6 +53,7 @@ logstashPipeline:
           hosts => [ "https://elasticsearch-master:9200" ]
           ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
+          ssl_certificate_verification => false
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myservice_%{+YYYY.MM.dd}"
@@ -63,6 +65,7 @@ logstashPipeline:
           hosts => [ "https://elasticsearch-master:9200" ]
           ssl => true
           cacert => '/usr/share/logstash/certs/ca.crt' 
+          ssl_certificate_verification => false
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_default_%{+YYYY.MM.dd}"
