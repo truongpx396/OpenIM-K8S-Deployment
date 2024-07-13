@@ -885,7 +885,8 @@ secondary:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     ##
     nodePorts:
-      mysql: ""
+      # mysql: ""
+      mysql: 3306
     ## @param secondary.service.clusterIP MySQL secondary Kubernetes service clusterIP IP
     ## e.g:
     ## clusterIP: None
