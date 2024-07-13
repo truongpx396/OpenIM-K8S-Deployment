@@ -500,7 +500,7 @@ primary:
     ##
     nodePorts:
       # mysql: ""
-      mysql: 3306
+      mysql: 30000
     ## @param primary.service.clusterIP MySQL Primary K8s service clusterIP IP
     ## e.g:
     ## clusterIP: None
