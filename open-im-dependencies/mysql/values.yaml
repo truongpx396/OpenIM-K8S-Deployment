@@ -489,7 +489,8 @@ primary:
   service:
     ## @param primary.service.type MySQL Primary K8s service type
     ##
-    type: ClusterIP
+    # type: ClusterIP
+    type: NodePort
     ## @param primary.service.ports.mysql MySQL Primary K8s service port
     ##
     ports:
@@ -498,7 +499,8 @@ primary:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     ##
     nodePorts:
-      mysql: ""
+      # mysql: ""
+      mysql: 3306
     ## @param primary.service.clusterIP MySQL Primary K8s service clusterIP IP
     ## e.g:
     ## clusterIP: None
@@ -875,8 +877,8 @@ secondary:
   service:
     ## @param secondary.service.type MySQL secondary Kubernetes service type
     ##
-    # type: ClusterIP
-    type: NodePort
+    type: ClusterIP
+    # type: NodePort
     ## @param secondary.service.ports.mysql MySQL secondary Kubernetes service port
     ##
     ports:
@@ -885,8 +887,8 @@ secondary:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     ##
     nodePorts:
-      # mysql: ""
-      mysql: 3306
+      mysql: ""
+      # mysql: 3306
     ## @param secondary.service.clusterIP MySQL secondary Kubernetes service clusterIP IP
     ## e.g:
     ## clusterIP: None
