@@ -875,7 +875,8 @@ secondary:
   service:
     ## @param secondary.service.type MySQL secondary Kubernetes service type
     ##
-    type: ClusterIP
+    # type: ClusterIP
+    type: NodePort
     ## @param secondary.service.ports.mysql MySQL secondary Kubernetes service port
     ##
     ports:
