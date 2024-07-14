@@ -527,7 +527,7 @@ db:
   ## e.g:
   ## host: foo
   ##
-  host: "openim-mysql.openim-dependencies.svc.cluster.local:3306"
+  host: "openim-mysql.openim-dependencies.svc.cluster.local"
   ## @param db.bundleTestDB Deploy a MariaDB instance for testing purposes
   ##
   bundleTestDB: false
