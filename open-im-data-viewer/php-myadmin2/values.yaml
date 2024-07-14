@@ -48,7 +48,7 @@ config:
   # -- if set to 1, will permit to use any arbitrary host
   PMA_ARBITRARY: ""
   # -- Set the variable PMA_ABSOLUTE_URI to the fully-qualified path (https://pma.example.net/) where the reverse proxy makes phpMyAdmin available.
-  PMA_ABSOLUTE_URI: ""
+  PMA_ABSOLUTE_URI: "https://reserve4.k8s.magiclab396.com"
   # -- define comma separated list of address/host names of the MySQL servers
   PMA_HOSTS: "openim-mysql.openim-dependencies.svc.cluster.local"
 ingress:
