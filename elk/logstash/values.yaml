@@ -51,6 +51,8 @@ logstashPipeline:
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myopensource_%{+YYYY.MM.dd}"
+          ssl => true
+          ssl_certificate_verification => false 
           }
         }
         else if "myservice" in [tags] {
@@ -61,6 +63,8 @@ logstashPipeline:
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_myservice_%{+YYYY.MM.dd}"
+          ssl => true
+          ssl_certificate_verification => false 
           }
         }
         else {
@@ -71,6 +75,8 @@ logstashPipeline:
           user => '${ELASTICSEARCH_USERNAME}'
           password => '${ELASTICSEARCH_PASSWORD}'
           index => "logstash_default_%{+YYYY.MM.dd}"
+          ssl => true
+          ssl_certificate_verification => false 
           }
         }
       }
