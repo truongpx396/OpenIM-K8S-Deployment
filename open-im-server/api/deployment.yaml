@@ -153,10 +153,14 @@ spec:
         - containerPort: 3306
           name: mysql
         env:
-          - MYSQL_ROOT_PASSWORD=openIM123
-          - MYSQL_USER=user
-          - MYSQL_PASSWORD=openIM123
-          - MYSQL_DATABASE=openIM_v3
+          - name: MYSQL_ROOT_PASSWORD
+            value: openIM123
+          - name: MYSQL_USER
+            value: user
+          - name: MYSQL_PASSWORD
+            value: openIM123
+          - name: MYSQL_DATABASE
+            value: openIM_v3
         resources:
           requests:
             memory: "100Mi"
