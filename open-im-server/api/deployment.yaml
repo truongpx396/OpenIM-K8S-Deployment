@@ -164,9 +164,9 @@ spec:
         volumeMounts:
             - mountPath: /bitnami/mysql
               name: data
-            - mountPath: /opt/bitnami/mysql/conf/my.cnf
-              name: config
-              subPath: my.cnf
+            # - mountPath: /opt/bitnami/mysql/conf/my.cnf
+            #   name: config
+            #   subPath: my.cnf
         resources:
           requests:
             memory: "100Mi"
