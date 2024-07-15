@@ -161,6 +161,12 @@ spec:
             value: openIM123
           - name: MYSQL_DATABASE
             value: openIM_v3
+        volumeMounts:
+            - mountPath: /bitnami/mysql
+              name: data
+            - mountPath: /opt/bitnami/mysql/conf/my.cnf
+              name: config
+              subPath: my.cnf
         resources:
           requests:
             memory: "100Mi"
@@ -172,6 +178,19 @@ spec:
             cpu: 100m
             # memory: "1024Mi"
             # cpu: 600m
+updateStrategy:
+    type: RollingUpdate
+volumeClaimTemplates:
+  - metadata:
+      labels:
+        app: test-mysql
+      name: data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
 ---
 apiVersion: v1
 kind: Service
