@@ -161,9 +161,9 @@ spec:
             value: openIM123
           - name: MYSQL_DATABASE
             value: openIM_v3
-        volumeMounts:
-            - mountPath: /bitnami/mysql
-              name: data
+        # volumeMounts:
+        #     - mountPath: /bitnami/mysql
+        #       name: data
             # - mountPath: /opt/bitnami/mysql/conf/my.cnf
             #   name: config
             #   subPath: my.cnf
