@@ -172,17 +172,17 @@ spec:
             # - mountPath: /opt/bitnami/mysql/conf/my.cnf
             #   name: config
             #   subPath: my.cnf
-        resources:
-          requests:
-            memory: "100Mi"
-            cpu: 70m
-            # memory: "512Mi"
-            # cpu: 300m
-          limits:
-            memory: "250Mi"
-            cpu: 100m
-            # memory: "1024Mi"
-            # cpu: 600m
+        # resources:
+        #   requests:
+        #     memory: "100Mi"
+        #     cpu: 70m
+        #     # memory: "512Mi"
+        #     # cpu: 300m
+        #   limits:
+        #     memory: "250Mi"
+        #     cpu: 100m
+        #     # memory: "1024Mi"
+        #     # cpu: 600m
 updateStrategy:
     type: RollingUpdate
 volumeClaimTemplates:
