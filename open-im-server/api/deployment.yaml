@@ -131,3 +131,55 @@ spec:
                 name: config
             - configMap:
                 name: notification
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-mysql-deployment
+spec:
+  selector:
+    matchLabels:
+      app: test-mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test-mysql
+    spec:
+      containers:
+      - name: test-msql
+        image: bitnami/mysql:8.2.0
+        ports:
+        - containerPort: 3306
+          name: mysql
+        env:
+          - MYSQL_ROOT_PASSWORD=openIM123
+          - MYSQL_USER=user
+          - MYSQL_PASSWORD=openIM123
+          - MYSQL_DATABASE=openIM_v3
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: 70m
+            # memory: "512Mi"
+            # cpu: 300m
+          limits:
+            memory: "250Mi"
+            cpu: 100m
+            # memory: "1024Mi"
+            # cpu: 600m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-mysql
+spec:
+  ports:
+    - name: test-mysql
+      protocol: TCP
+      port: 3306
+      targetPort: mysql
+  selector:
+    app: test-mysql
+  type: ClusterIP  
+     
