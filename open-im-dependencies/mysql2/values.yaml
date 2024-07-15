@@ -1,5 +1,5 @@
-nameOverride: mysql
-fullnameOverride: mysql
+nameOverride: openim-mysql
+fullnameOverride: openim-mysql
 
 image:
   registry: registry.cn-beijing.aliyuncs.com
