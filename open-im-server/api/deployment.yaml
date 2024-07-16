@@ -132,82 +132,82 @@ spec:
             - configMap:
                 name: notification
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: test-mysql-deployment
-spec:
-  selector:
-    matchLabels:
-      app: test-mysql
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: test-mysql
-    spec:
-      securityContext:
-        fsGroup: 1001
-        runAsUser: 1001
-      containers:
-      - name: test-msql
-        image: bitnami/mysql:8.2.0
-        ports:
-        - containerPort: 3306
-          name: mysql
-        env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: openIM123
-          - name: MYSQL_USER
-            value: user
-          - name: MYSQL_PASSWORD
-            value: openIM123
-          - name: MYSQL_DATABASE
-            value: openIM_v3
-          - name:  BITNAMI_DEBUG
-            value: 'true'
-        # volumeMounts:
-        #     - mountPath: /bitnami/mysql
-        #       name: data
-            # - mountPath: /opt/bitnami/mysql/conf/my.cnf
-            #   name: config
-            #   subPath: my.cnf
-        # resources:
-        #   requests:
-        #     memory: "100Mi"
-        #     cpu: 70m
-        #     # memory: "512Mi"
-        #     # cpu: 300m
-        #   limits:
-        #     memory: "250Mi"
-        #     cpu: 100m
-        #     # memory: "1024Mi"
-        #     # cpu: 600m
-updateStrategy:
-    type: RollingUpdate
-volumeClaimTemplates:
-  - metadata:
-      labels:
-        app: test-mysql
-      name: data
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 20Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: test-mysql
-spec:
-  ports:
-    - name: test-mysql
-      protocol: TCP
-      port: 3306
-      targetPort: mysql
-  selector:
-    app: test-mysql
-  type: ClusterIP  
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: test-mysql-deployment
+# spec:
+#   selector:
+#     matchLabels:
+#       app: test-mysql
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: test-mysql
+#     spec:
+#       securityContext:
+#         fsGroup: 1001
+#         runAsUser: 1001
+#       containers:
+#       - name: test-msql
+#         image: bitnami/mysql:8.2.0
+#         ports:
+#         - containerPort: 3306
+#           name: mysql
+#         env:
+#           - name: MYSQL_ROOT_PASSWORD
+#             value: openIM123
+#           - name: MYSQL_USER
+#             value: user
+#           - name: MYSQL_PASSWORD
+#             value: openIM123
+#           - name: MYSQL_DATABASE
+#             value: openIM_v3
+#           - name:  BITNAMI_DEBUG
+#             value: 'true'
+#         # volumeMounts:
+#         #     - mountPath: /bitnami/mysql
+#         #       name: data
+#             # - mountPath: /opt/bitnami/mysql/conf/my.cnf
+#             #   name: config
+#             #   subPath: my.cnf
+#         # resources:
+#         #   requests:
+#         #     memory: "100Mi"
+#         #     cpu: 70m
+#         #     # memory: "512Mi"
+#         #     # cpu: 300m
+#         #   limits:
+#         #     memory: "250Mi"
+#         #     cpu: 100m
+#         #     # memory: "1024Mi"
+#         #     # cpu: 600m
+# updateStrategy:
+#     type: RollingUpdate
+# volumeClaimTemplates:
+#   - metadata:
+#       labels:
+#         app: test-mysql
+#       name: data
+#     spec:
+#       accessModes:
+#         - ReadWriteOnce
+#       resources:
+#         requests:
+#           storage: 20Gi
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: test-mysql
+# spec:
+#   ports:
+#     - name: test-mysql
+#       protocol: TCP
+#       port: 3306
+#       targetPort: mysql
+#   selector:
+#     app: test-mysql
+#   type: ClusterIP  
      
