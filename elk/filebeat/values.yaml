@@ -73,6 +73,8 @@ daemonset:
         paths:
           - /var/log/containers/openim*.log
           - /var/log/containers/*openim*.log
+          - /var/log/containers/*OpenIM*
+         
         tags: ["myservice"]
         processors:
         - add_kubernetes_metadata:
