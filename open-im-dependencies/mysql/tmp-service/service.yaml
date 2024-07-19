@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-mysql
+  name: test-mysql-svc
 spec:
   ports:
   - name: mysql
