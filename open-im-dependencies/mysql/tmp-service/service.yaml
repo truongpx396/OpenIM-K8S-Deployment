@@ -6,7 +6,8 @@ metadata:
 spec:
   ports:
   - name: mysql
-    port: 30100
+    nodePort: 30100
+    port: 30200
     protocol: TCP
     targetPort: mysql
   selector:
